@@ -1,23 +1,27 @@
 name: Docker image build
 
-on: push
+on: 
+  push:
+    branches:
+      - main  # or any other branch you want to track
 
 jobs:
-    build:
+  build:
+    runs-on: ubuntu-latest
 
-        runs-on: ubuntu-latest
+    steps: 
+      - uses: actions/checkout@v4
 
-        steps: 
-            - uses: actions/checkout@v1
-            - name: testing
-              run: |
-                ls
-                pwd
-                cat main.py
-                cat Dockerfile
-                cat requirements.txt
-            - name: Build & Push Image
-              run: |
-                echo ${{ secrets.DOCKERTOKEN }} | docker login -u "akshitchauhan" --password-stdin
-                docker build -t akshitchauhan/fastapi-dockerize:v0.1 .
-                docker push akshitchauhan/fastapi-dockerize:v0.1
+      - name: Display file contents
+        run: |
+          ls
+          pwd
+          cat main.py
+          cat Dockerfile
+          cat requirements.txt
+
+      - name: Build & Push Docker Image
+        run: |
+          echo "${{ secrets.DOCKERTOKEN }}" | docker login -u "akshitchauhan" --password-stdin
+          docker build -t akshitchauhan/fastapi-dockerize:v0.1 .
+          docker push akshitchauhan/fastapi-dockerize:v0.1
