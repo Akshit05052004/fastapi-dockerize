@@ -1,26 +1,39 @@
-name: Docker image build
+name: Docker image build and push
 
-on: 
+on:
   push:
     branches:
-      - main  # or any other branch you want to track
+      - main  # Change this if you're pushing to another branch
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
-    steps: 
-      - uses: actions/checkout@v4
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Display file contents
+      - name: Display project files
         run: |
-          ls
-          pwd
-          cat main.py
-          cat Dockerfile
-          cat requirements.txt
+          echo "📁 Listing files:"
+          ls -la
+          echo "🔍 Preview Dockerfile:"
+          cat Dockerfile || echo "Dockerfile not found"
+          echo "🔍 Preview main.py:"
+          cat main.py || echo "main.py not found"
+          echo "🔍 Preview requirements.txt:"
+          cat requirements.txt || echo "requirements.txt not found"
 
-      - name: Build & Push Docker Image
+      - name: Check if DOCKERTOKEN secret is present
+        run: |
+          if [ -z "${{ secrets.DOCKERTOKEN }}" ]; then
+            echo "❌ DOCKERTOKEN is empty or not defined"
+            exit 1
+          else
+            echo "✅ DOCKERTOKEN is set"
+          fi
+
+      - name: Docker login, build & push
         run: |
           echo "${{ secrets.DOCKERTOKEN }}" | docker login -u "akshitchauhan" --password-stdin
           docker build -t akshitchauhan/fastapi-dockerize:v0.1 .
