@@ -1,0 +1,23 @@
+name: Docker image build
+
+on: push
+
+jobs:
+    build:
+
+        runs-on: ubuntu-latest
+
+        steps: 
+            - uses: actions/checkout@v1
+            - name: testing
+              run: |
+                ls
+                pwd
+                cat main.py
+                cat Dockerfile
+                cat requirements.txt
+            - name: Build & Push Image
+              run: |
+                echo ${{ secrets.DOCKERTOKEN }} | docker login -u "akshitchauhan" --password-stdin
+                docker build -t akshitchauhan/testfastapi-dockerize:v0.1 .
+                docker push akshitchauhan/fastapi-dockerizet:v0.1
