@@ -20,4 +20,4 @@ jobs:
               run: |
                 echo ${{ secrets.DOCKERTOKEN }} | docker login -u "akshitchauhan" --password-stdin
                 docker build -t akshitchauhan/fastapi-dockerize:v0.1 .
-                docker push akshitchauhan/fastapi-dockerizet:v0.1
+                docker push akshitchauhan/fastapi-dockerize:v0.1
